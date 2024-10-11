@@ -37,6 +37,8 @@ class Drivetrain(commands2.Subsystem):
         # And an onboard gyro (and you have to power on your XRP when it is on flat surface)
         self.gyro = xrp.XRPGyro()
         self.accelerometer = wpilib.BuiltInAccelerometer()
+        self.reflectanceSensor = xrp.XRPReflectanceSensor()
+        self.distanceSensor = xrp.XRPRangefinder()
 
         # Use inches as unit for encoder distances
         self.leftEncoder.setDistancePerPulse(
@@ -55,9 +57,15 @@ class Drivetrain(commands2.Subsystem):
 
     def periodic(self) -> None:
         pose = self.odometry.update(Rotation2d.fromDegrees(self.getGyroAngleZ()), self.getLeftDistanceInch(), self.getRightDistanceInch())
-        SmartDashboard.putNumber("heading", pose.rotation().degrees())
         SmartDashboard.putNumber("x", pose.x)
         SmartDashboard.putNumber("y", pose.y)
+        SmartDashboard.putNumber("z-heading", pose.rotation().degrees())
+        distance = self.distanceSensor.getDistance()
+        if distance >= 0.5:  # in our experience, distances above 0.5 meters are not reliable
+            distance = math.nan
+        SmartDashboard.putNumber("distance", distance)
+        SmartDashboard.putNumber("left-reflect", self.reflectanceSensor.getLeftReflectanceValue())
+        SmartDashboard.putNumber("right-reflect", self.reflectanceSensor.getRightReflectanceValue())
 
 
     def arcadeDrive(self, fwd: float, rot: float) -> None:
