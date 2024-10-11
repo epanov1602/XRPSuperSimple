@@ -1,3 +1,4 @@
 robotpy[commands2,sim,xrp]
+robotpy-xrp
 wpilib
 
