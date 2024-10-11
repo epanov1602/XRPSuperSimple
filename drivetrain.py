@@ -60,10 +60,7 @@ class Drivetrain(commands2.Subsystem):
         SmartDashboard.putNumber("x", pose.x)
         SmartDashboard.putNumber("y", pose.y)
         SmartDashboard.putNumber("z-heading", pose.rotation().degrees())
-        distance = self.distanceSensor.getDistance()
-        if distance >= 0.5:  # in our experience, distances above 0.5 meters are not reliable
-            distance = math.nan
-        SmartDashboard.putNumber("distance", distance)
+        SmartDashboard.putNumber("distance", self.getDistanceToObstacle())
         SmartDashboard.putNumber("left-reflect", self.reflectanceSensor.getLeftReflectanceValue())
         SmartDashboard.putNumber("right-reflect", self.reflectanceSensor.getRightReflectanceValue())
 
@@ -145,6 +142,14 @@ class Drivetrain(commands2.Subsystem):
         :returns: The current angle of the XRP in degrees
         """
         return self.gyro.getAngleZ()
+
+    def getDistanceToObstacle(self) -> float:
+        """Distance to obstacle in the front, as given by the distance sensor
+
+        :returns: Distance in meters, values >0.5 are not very reliable and are replaced with nan.
+        """
+        distance = self.distanceSensor.getDistance()
+        return distance if distance < 0.5 else math.nan
 
     def resetGyro(self) -> None:
         """Reset the gyro"""
