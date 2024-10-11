@@ -50,7 +50,7 @@ class MyRobot(wpilib.TimedRobot):
         super().robotPeriodic()
 
         # 1. driving: take the speeds from joystick
-        fwd_speed = self.joystick.getRawAxis(1)
+        fwd_speed = -self.joystick.getRawAxis(1)
         turn_speed = self.joystick.getRawAxis(0)
         self.drivetrain.arcadeDrive(fwd_speed, turn_speed)
         self.drivetrain.periodic()  # updates odometry

@@ -26,8 +26,8 @@ class Drivetrain(commands2.Subsystem):
         # The XRP has the left and right motors set to
         # PWM channels 0 and 1 respectively
         self.leftMotor = xrp.XRPMotor(0)
-        self.leftMotor.setInverted(True)
         self.rightMotor = xrp.XRPMotor(1)
+        self.rightMotor.setInverted(True)
 
         # The XRP has onboard encoders that are hardcoded
         # to use DIO pins 4/5 and 6/7 for the left and right
@@ -72,7 +72,7 @@ class Drivetrain(commands2.Subsystem):
         :param fwd: the commanded forward movement
         :param rot: the commanded rotation
         """
-        self.drive.arcadeDrive(fwd, rot)
+        self.drive.arcadeDrive(fwd, -rot)
 
     def stop(self) -> None:
         """
@@ -92,10 +92,10 @@ class Drivetrain(commands2.Subsystem):
         return self.rightEncoder.get()
 
     def getLeftDistanceInch(self) -> float:
-        return self.leftEncoder.getDistance()
+        return -self.leftEncoder.getDistance()
 
     def getRightDistanceInch(self) -> float:
-        return self.rightEncoder.getDistance()
+        return -self.rightEncoder.getDistance()
 
     def getAverageDistanceInch(self) -> float:
         """Gets the average distance of the TWO encoders."""
